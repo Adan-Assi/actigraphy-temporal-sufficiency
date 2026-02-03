@@ -41,7 +41,8 @@ Using minute-level actigraphy data, we ask:
 
 - Segment raw actigraphy into **day-aligned windows** of varying lengths:
   - 2, 3, 5, 7, and 14 days
-- Exclude windows with **<80% data completeness**
+- Exclude windows with **<80% data completeness per calendar day**
+  (calendar days are defined as 00:00–23:59; partial recording days at measurement boundaries are handled via the completeness criterion).
 - **No imputation** is performed
 
 Each window is treated as a candidate temporal representation.
