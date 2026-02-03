@@ -1,0 +1,10 @@
+# Raw data (never commit)
+data/raw/
+data/scores.csv
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter checkpoints
+.ipynb_checkpoints/

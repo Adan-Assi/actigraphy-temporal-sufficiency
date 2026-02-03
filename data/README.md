@@ -11,5 +11,9 @@ Expected structure:
     ├── raw/
     │   ├── control/
     │   └── depressed/
+    ├── processed/
+    │   ├── windows/
+    │   └── features/
+    ├── scores.csv
 
 The raw data files are not included in this repository.
