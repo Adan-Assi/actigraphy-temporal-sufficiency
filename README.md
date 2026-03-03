@@ -1,75 +1,38 @@
 # Assessing Temporal Sufficiency of Circadian Actigraphy Features
 
 ## Overview
+This project investigates a fundamental methodological question in digital phenotyping: **When does a temporal segment of actigraphy data become sufficient to support meaningful circadian representations?**
 
-This project investigates how much actigraphy data is required for circadian features to become stable and informative. 
+The motivation stems from clinical monitoring—such as the early phases of SSRI treatment—where risk assessment must rely on limited data. While short observation periods are necessary for rapid intervention, they often produce noisy and unreliable representations. 
 
-The motivation stems from real-world clinical monitoring, such as the early phases of SSRI treatment, where risk assessment must rely on limited data. In such settings, waiting for long observation periods is often infeasible, yet very short windows may produce noisy and unreliable representations.
+---
 
-Rather than building a classification system, this project addresses a fundamental methodological question:
-**When does a temporal segment of actigraphy data become sufficient to support meaningful circadian representations?**
+## The Core Thesis: The Inverse Trade-off
+
+Through an analysis of the **DEPRESJON** dataset (23 Depressed, 32 Control), this project identifies a critical **Inverse Trade-off**:
+* **Stable features (e.g., Amplitude)** are often the least clinically informative.
+* **Informative features (e.g., Acrophase)** are often the least stable.
+
+**Representation sufficiency is feature-dependent.** There is no single "sufficient" window length; instead, the optimal window must be balanced between the mathematical stability of the feature and its discriminative power.
+
+---
+
+## Key Results at a Glance
+
+* **The 5-Day "Sweet Spot":** Most circadian features reach a reliability threshold ($ICC > 0.60$) at exactly 5 days. 
+* **Phase Paradox:** Timing metrics (**Acrophase**) are the strongest group discriminators but require the most data (7+ days) to achieve individual stability.
+* **Clinical Recommendation:** 5 days represents the optimal balance between high feature reliability and participant data retention ($N=51$).
+
+> **For a detailed breakdown of findings, statistical tables, and stability plots, see [results/README.md](./results/README.md).**
 
 ---
 
 ## Methodology: The Dual-Feature Approach
 
-We analyze the activity signal through two distinct lenses to evaluate sufficiency across different mathematical representations:
+We analyze activity signals through two distinct lenses:
 
-### 1. Naive Baseline (Parametric)
-Uses a **Cosinor Model** (Least-Squares Sine Fit) to extract standard circadian parameters based on the assumption of periodicity:
-* **Mesor:** The 24-hour rhythm-adjusted mean activity level.
-* **Amplitude:** The peak-to-average difference of the fitted wave.
-* **Acrophase:** The timing of peak activity (Phase position).
-
-### 2. Non-Naive Analysis (Non-Parametric)
-Captures rhythm characteristics that do not assume a sinusoidal shape, reflecting the "quality" of the rhythm:
-* **Interdaily Stability ($IS$):** The degree of pattern consistency across days (Regularity).
-* **Intradaily Variability ($IV$):** The fragmentation of the rhythm (Rest-activity transitions).
-* **Relative Amplitude ($RA$):** The contrast between the most active 10 hours ($M10$) and least active 5 hours ($L5$).
-
----
-
-## Key Findings & Research Questions
-
-### Q1: When do circadian features become stable within a person?
-* **The 5-Day Sweet Spot:** Activity volume metrics (**Amplitude/Mesor**) reach "Excellent" reliability (**$ICC \approx 0.80$**) at exactly **5 days**.
-* **Phase Instability:** Timing metrics (**Acrophase**) remain erratic within-subject, showing poor reliability across all windows (**$ICC < 0.40$**).
-
-### Q2: At what window length do features reliably separate groups?
-* **The Phase Paradox:** Despite its low individual stability, **Acrophase** is the strongest group discriminator, peaking with a large effect size (**Cohen's $d \approx 0.70$**) at short durations.
-* **The Volume Gap:** Conversely, the highly stable **Amplitude** metric demonstrates negligible power in distinguishing depressed patients from controls (**Cohen's $d \approx 0.06$**).
-
-### Q3: How does representation sufficiency change over time?
-* **Activity Volume** reaches sufficiency at **5 days**.
-* **Circadian Phase** and **Fragmentation ($IV$)** require **7+ days** to balance discriminative power with stable reliability.
-
-
-
----
-
-## Discussion: Clinical Robustness vs. Simple Discovery
-
-The analysis reveals a distinct functional split between the two approaches. While both provide value, they serve different roles in research and clinical deployment.
-
-### 1. The Naive Baseline for "Simple Discovery"
-The **Cosinor** approach is highly effective for identifying broad, population-level differences:
-* **Insight:** Depressed patients exhibit a significantly earlier and more constrained peak activity timing compared to controls.
-* **Limitation:** Acrophase acts as a powerful "snapshot" of group differences but lacks the stability required for individual tracking over time.
-
-### 2. Non-Naive Analysis for "Clinical Robustness"
-The **Non-Parametric** indices are preferred for applications requiring consistent, real-world monitoring:
-* **Insight:** These features measure regularity and fragmentation, which are biologically representative of circadian decay in mental health.
-* **Reliability Advantage:** Non-Naive features avoid the mathematical instability of the sine-fit. They provide a more balanced profile of moderate separation paired with stability trajectories that favor longer-term (7-day) monitoring.
-
-### Final Methodological Conclusion
-* **Naive Features** are superior for **discovery** and identifying high-level phase shifts in small datasets.
-* **Non-Naive Features** are superior for **clinical robustness**, providing the stable, ecologically valid metrics necessary for real-world monitoring.
-
----
-
-## Interpretation: The Inverse Trade-off
-
-The analysis demonstrates an **Inverse Trade-off**: features that are the most stable (Amplitude) are the least clinically informative, while the most informative features (Acrophase) are the least stable. This project emphasizes that **representation sufficiency is feature-dependent**; there is no single "sufficient" window length for all circadian metrics.
+1. **Naive Baseline (Parametric):** Uses a **Cosinor Model** (Sine Fit) to extract Mesor, Amplitude, and Acrophase.
+2. **Non-Naive Analysis (Non-Parametric):** Extracts rhythm "quality" metrics including Interdaily Stability ($IS$), Intradaily Variability ($IV$), and Relative Amplitude ($RA$).
 
 ---
 
@@ -127,7 +90,9 @@ The analysis is structured to be run sequentially within the provided Jupyter No
 actigraphy-temporal-sufficiency/
 ├── README.md
 ├── results/
-│   └── thesis_feature_comparison.csv  # Final Master Table (ICC & Cohen's d)
+│   ├── README.md                       # Technical findings & interpretations
+│   ├── final_stability_profile.png      # Stability Profile (Smoking Gun)
+│   └── thesis_feature_comparison.csv    # Master Results Table
 ├── src/
 │   ├── windowing.py      # Window segmentation & completeness checks
 │   ├── baselines.py      # Cosinor and Non-parametric feature extraction
@@ -135,5 +100,5 @@ actigraphy-temporal-sufficiency/
 │   └── features.py       # Feature utility functions
 ├── notebooks/
 │   ├── sanity_checks.ipynb
-│   └── temporal_sufficiency_analysis.ipynb  # Primary analysis, visualizations, and master export
+│   └── temporal_sufficiency_analysis.ipynb # Primary analysis, visualizations, and master export
 └── requirements.txt
