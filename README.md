@@ -40,7 +40,7 @@ We analyze activity signals through two distinct lenses:
 
 * **Dataset:** DEPRESJON (Publicly available via [Zenodo](https://zenodo.org/records/1219550)).
 * **Subjects:** 23 Depressed patients, 32 Matched controls.
-* **Segmentation:** Raw actigraphy is segmented into day-aligned windows (2, 3, 5, 7, and 14 days).
+* **Segmentation:** Raw actigraphy is segmented into day-aligned windows (2, 3, 5, and 7 days).
 * **Completeness:** Windows with **$<80\%$ data completeness** per calendar day are excluded to maintain signal integrity.
 
 ---
